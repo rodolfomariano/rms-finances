@@ -1,13 +1,13 @@
-import { useContext } from "react";
+
 
 import { MdDeleteForever, MdCreate } from "react-icons/md"
-import { TransactionsContext } from "../../TransactionsContext";
+import { useTransactions } from "../../hooks/useTransactions";
 
 import { Container } from "./styles";
 
 
 export default function TransactionTable() {
-  const { transactions } = useContext(TransactionsContext)
+  const { transactions } = useTransactions()
   
 
   return (
