@@ -1,15 +1,14 @@
-import { Container } from "./styles";
+import { useContext } from "react";
 
 import { MdDeleteForever, MdCreate } from "react-icons/md"
-import { useEffect } from "react";
-import { api } from "../../services/api";
+import { TransactionsContext } from "../../TransactionsContext";
+
+import { Container } from "./styles";
+
 
 export default function TransactionTable() {
-
-  useEffect(() => {
-    api.get('transactions')
-      .then(response => console.log(response.data))
-  }, [])
+  const { transactions } = useContext(TransactionsContext)
+  
 
   return (
     <Container>
@@ -26,30 +25,36 @@ export default function TransactionTable() {
         </thead> 
 
         <tbody>
-          <tr>
-            <td>20/02/2021</td>
-            <td>Salário</td>
-            <td className="deposit">R$1.800,00</td>
-            <td>Entrada</td>
-            <td>
-              <div>
-                <button className="editBtn"> <MdCreate size={22} /> </button>
-                <button className="deletBtn"> <MdDeleteForever size={22} /> </button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>20/02/2021</td>
-            <td>Mercado</td>
-            <td className="withdraw">R$500,00</td>
-            <td>Saida</td>
-            <td>
-              <div>
-                <button className="editBtn"> <MdCreate size={22} /> </button>
-                <button className="deletBtn"> <MdDeleteForever size={22} /> </button>
-              </div>
-            </td>
-          </tr>
+
+          {transactions.map(transaction => {
+            return (
+              <tr key={transaction.id}>
+
+                <td>
+                  {new Intl.DateTimeFormat('pt-BR').format(
+                    new Date(transaction.createdAt)
+                  )}
+                </td>
+                
+                <td>{transaction.title}</td>
+
+                <td className={transaction.type}>
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).format(transaction.amount)}
+                </td>
+
+                <td>{transaction.category}</td>
+                <td>
+                  <div>
+                    <button className="editBtn"> <MdCreate size={22} /> </button>
+                    <button className="deletBtn"> <MdDeleteForever size={22} /> </button>
+                  </div>
+                </td>
+              </tr>
+            )
+          })}
           
         </tbody>
       </table>
